@@ -1,0 +1,14 @@
+# Netlify config — used only if you deploy via Netlify (Path B: keep repo private).
+# Harmless if you go with GitHub Pages instead (Path A) — Pages ignores this file.
+
+[build]
+  publish = "."
+  command = ""
+
+# The site is a JS-rendered static site using query params (?id=slug),
+# so no SPA redirects are needed — every route is a real HTML file.
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
