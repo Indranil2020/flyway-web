@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Locations — 18 birding sites in West Bengal | Flyway Expeditions</title>
+<meta name="description" content="All 18 birding and wildlife locations we cover in West Bengal, with month-by-month status, flagship species, elevation and daily rates. Sundarbans, Singalila, Neora Valley, Buxa, Kulik and more."/>
+<link rel="icon" href="photos/brand/logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/site.css"/>
+<script src="assets/js/data.js"></script><script src="assets/js/media.js"></script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<section class="sect">
+  <div class="wrap">
+    <span class="eyebrow">The territory · 18 sites · 3 zones</span>
+    <h1 style="font-size:clamp(38px,6vw,72px);margin-top:14px;max-width:19ch">Every site we cover, <em style="font-style:italic;color:var(--ochre-2)">month by month.</em></h1>
+    <p class="lede" style="margin-top:20px">Squares run January to December. Dark green is peak, sage is open, ochre is fair, grey is closed. Click any site for species, timing, rate and its eBird hotspot.</p>
+    <div class="filters" style="margin-top:32px" id="filters"></div>
+
+    <div class="scrollx" style="margin-top:30px"><div class="rows" id="table"></div></div>
+    <div class="legend" id="legend"></div>
+  </div>
+</section>
+
+<section class="sect sect--tint">
+  <div class="wrap">
+    <div class="sect-head"><div><span class="eyebrow">Cards view</span><h2>Browse by photograph.</h2></div>
+    <p>Each location's photos live in <code class="mono">photos/locations/&lt;id&gt;/</code>. Add a folder, it wires itself up.</p></div>
+    <div class="grid grid--3" id="cards"></div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="assets/js/site.js"></script>
+<script>
+(function(){
+  var FW=window.FW,U=window.FWUI,zone='all';
+  var opts=[['all','All 18']].concat(Object.keys(FW.zones).map(function(k){return [k,FW.zones[k].label]}));
+  document.getElementById('filters').innerHTML=opts.map(function(o){
+    return '<button data-z="'+o[0]+'" aria-pressed="'+(o[0]==='all')+'">'+o[1]+'</button>';}).join('');
+  document.getElementById('legend').innerHTML=[['peak','Peak'],['good','Open'],['fair','Fair'],['closed','Closed']]
+    .map(function(p){return '<div><i style="background:'+U.TONE[p[0]]+'"></i>'+p[1]+'</div>';}).join('');
+  var COLS='40px minmax(150px,1.5fr) minmax(130px,1fr) repeat(12,minmax(0,14px)) 74px';
+  function draw(){
+    var list=zone==='all'?FW.locations:FW.locations.filter(function(l){return l.zone===zone});
+    var head='<div class="row row-h" style="grid-template-columns:'+COLS+'"><span>#</span><span>Site</span><span>Flagship</span>'+
+      U.MKEY.map(function(k){return '<span style="text-align:center">'+k+'</span>'}).join('')+'<span style="text-align:right">₹/day</span></div>';
+    document.getElementById('table').innerHTML=head+list.map(function(l,i){
+      return '<a class="row" href="location.html?id='+l.id+'" style="grid-template-columns:'+COLS+'">'+
+      '<span class="mono" style="font-size:10.5px;color:var(--muted)">'+String(i+1).padStart(2,'0')+'</span>'+
+      '<span><b>'+U.esc(l.name)+'</b><small>'+U.esc(l.district)+' · '+U.esc(l.elev)+'</small></span>'+
+      '<span style="font-size:12.5px;color:var(--ink-2)">'+U.esc(l.species[0])+'</span>'+
+      [1,2,3,4,5,6,7,8,9,10,11,12].map(function(m){
+        var s=U.statusOf(l,m);
+        return '<i style="height:22px;background:'+U.TONE[s]+';display:block;border-radius:1px" title="'+U.MONTHS[m-1]+' · '+U.TONE_LABEL[s]+'"></i>';
+      }).join('')+
+      '<span class="mono" style="font-size:11.5px;color:var(--ochre-2);text-align:right">'+(l.price/1000).toFixed(1)+'k</span></a>';
+    }).join('');
+    document.getElementById('cards').innerHTML=list.map(U.locCard).join('');
+    U.hydrate();
+  }
+  document.getElementById('filters').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-z]');if(!b)return;
+    zone=b.getAttribute('data-z');
+    this.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});draw();
+  });
+  draw();
+})();
+</script>
+</body>
+</html>

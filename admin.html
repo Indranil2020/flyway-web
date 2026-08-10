@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Ops — Flyway Expeditions (internal)</title>
+<link rel="icon" href="photos/brand/logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/site.css"/>
+<style>
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.tabs button{padding:14px 20px;border:0;background:transparent;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid transparent}
+.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--ochre)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.kpi>div{border:1px solid var(--rule);padding:18px;background:var(--paper)}
+.kpi b{font-family:var(--display);font-size:28px;font-weight:500;display:block;margin-top:7px}
+pre.snip{background:var(--paper);border:1px solid var(--rule);padding:18px;font-family:var(--mono);font-size:12px;line-height:1.7;white-space:pre-wrap;margin:0;overflow:auto}
+details.sn{border-bottom:1px solid var(--rule)}
+details.sn summary{padding:16px 20px;cursor:pointer;font-family:var(--display);font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:14px}
+details.sn summary::-webkit-details-marker{display:none}
+.hdr-bar{background:var(--ink);color:var(--paper);padding:14px 0}
+</style>
+<script src="assets/js/data.js"></script><script src="assets/js/media.js"></script>
+</head>
+<body>
+<div class="hdr-bar"><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:11px">
+    <img src="photos/brand/logo.png" alt="" style="width:34px;height:34px;object-fit:contain"/>
+    <div><div style="font-family:var(--display);font-size:16px">Operations</div>
+    <div class="mono" style="font-size:8.5px;letter-spacing:.2em;color:rgba(244,242,236,.5);text-transform:uppercase;margin-top:3px">Internal · not indexed</div></div>
+  </div>
+  <div class="mono" style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,242,236,.6)" id="topStat"></div>
+  <a class="btn btn--onDark btn--sm" href="index.html">← Public site</a>
+</div></div>
+
+<div class="wrap" style="padding-block:26px">
+  <div class="tabs" id="tabs">
+    <button data-t="month" aria-selected="true">This month</button>
+    <button data-t="content" aria-selected="false">Content bank</button>
+    <button data-t="photos" aria-selected="false">Photo folders</button>
+    <button data-t="playbook" aria-selected="false">Playbook</button>
+  </div>
+  <div id="pane" style="padding-top:30px"></div>
+</div>
+
+<script src="assets/js/site.js"></script>
+<script>
+(function(){
+var FW=window.FW,U=window.FWUI,M=window.FW_MEDIA;
+var cur=new Date().getMonth();
+
+var SNIPPETS=[
+ ['WhatsApp · Off-hours auto-reply',
+`Hi! Thanks for messaging Flyway Expeditions.
+
+We're often in the field with no signal — we reply to every message within one working day.
+
+• Tours & prices: flywayexpeditions.in/tours
+• What's open this month: flywayexpeditions.in/calendar
+• Custom trip: just send your dates + what you'd like to see
+
+— Team Flyway`],
+ ['WhatsApp · First reply to an enquiry',
+`Hi {NAME}, good to hear from you.
+
+A few things so we can build the right itinerary:
+
+1. Travel window (dates or month)?
+2. Group size, and any children or seniors?
+3. Target species or experience — hornbills, tragopan, tigers, photography?
+4. Rough budget per person?
+5. Which city are you travelling from?
+
+We'll come back within 24 hours with a draft route and a firm quote. — {GUIDE}`],
+ ['Instagram · Species spotlight caption',
+`{SCIENTIFIC_NAME} — the {COMMON_NAME}
+
+{ONE_LINE_FIELD_NOTE}
+
+Where: {LOCATION}, {ZONE}
+When: {MONTHS}, {TIME_OF_DAY}
+
+Trip planning open for {SEASON}. DM "{KEYWORD}" and we'll send the route.
+
+#WestBengalBirding #IndiAves #BirdingIndia #{SPECIES_TAG} #{LOCATION_TAG} #BirdsOfInstagram #IndianBirds #NaturePhotography #FlywayExpeditions`],
+ ['Instagram · Field report caption',
+`Field report · {LOCATION}, {DATE}
+
+{N} days. {HIGHLIGHT_COUNT} {HIGHLIGHT_GROUP}. One very happy group of {GROUP_SIZE}.
+
+→ {SPECIES_1}
+→ {SPECIES_2}
+→ {SPECIES_3}
+→ {TOTAL} species logged, full checklist on eBird
+
+{TOUR_NAME} runs through {WINDOW}. Comment "{KEYWORD}" or DM to hold a place.
+
+#BirdingIndia #IndiAves #{LOCATION_TAG} #FlywayExpeditions`],
+ ['Facebook · Monthly long-form post',
+`🦆 BENGAL BIRD CALENDAR — {MONTH} UPDATE
+
+{MONTH} is {STATUS} in West Bengal. {OPEN_COUNT} of our 18 locations are open right now.
+
+What's worth travelling for:
+• {SITE_1} — {WHY_1}
+• {SITE_2} — {WHY_2}
+• {SITE_3} — {WHY_3}
+• {SITE_4} — {WHY_4}
+
+Comment or DM with your dates. Every trip is built around the birds you want, the window you have, and the comfort level you need.
+
+— Flyway Expeditions | Kolkata
+🌐 flywayexpeditions.in
+📱 {PHONE}`],
+ ['Email · Newsletter issue skeleton',
+`Subject: {MONTH} in Bengal — {HOOK}
+
+Hi {NAME},
+
+THIS MONTH IN BENGAL
+{OPEN_COUNT} of 18 sites open. {ONE_PARAGRAPH_STATUS}
+
+TRIP REPORT — {TOUR_NAME}
+{THREE_SENTENCES}. Full checklist: {EBIRD_LINK}
+
+THREE BIRDS WORTH TRAVELLING FOR
+1. {SPECIES_1} — {WHERE_WHEN}
+2. {SPECIES_2} — {WHERE_WHEN}
+3. {SPECIES_3} — {WHERE_WHEN}
+
+OPEN DEPARTURES
+{TOUR_1} · {DATES} · {PRICE} · {SEATS} places left
+{TOUR_2} · {DATES} · {PRICE} · {SEATS} places left
+
+Reply to this email or WhatsApp {PHONE} to hold a place.
+
+Bird first,
+Team Flyway · Kolkata`],
+ ['YouTube · Description template',
+`EP {NN} · {TITLE} — {LOCATION}, West Bengal
+
+{TWO_SENTENCE_SUMMARY} Target species: {SPECIES_LIST}. Total logged: {COUNT}.
+
+00:00 Intro
+{TIMESTAMPS}
+
+🦆 Plan a trip: flywayexpeditions.in
+📱 WhatsApp: {PHONE}
+📷 Instagram: @{IG_HANDLE}
+📋 eBird checklist: {EBIRD_LINK}
+
+Shot on {GEAR}. No calls or playback were used to attract birds.
+
+#BirdingIndia #WestBengal #{LOCATION_TAG} #IndiAves`],
+ ['Google Business Profile · Description',
+`Flyway Expeditions is a birding and wildlife tour operator based in Kolkata, West Bengal. We run field-led expeditions across 18 hotspots — from the Sundarbans mangroves to the Singalila ridge at 3,600 m. Small groups of four to eight, region-specialist naturalists, and custom itineraries built around your target species. Every trip files a complete eBird checklist. WhatsApp {PHONE}.`],
+ ['Enquiry form · Question list (Tally / Google Forms)',
+`FLYWAY EXPEDITIONS — TRIP ENQUIRY
+
+1. Your name *
+2. Phone / WhatsApp *
+3. Email
+4. Trip of interest (dropdown: all tours + "custom")
+5. Travel window — dates or month *
+6. Adults *
+7. Children, with ages
+8. Departure city
+9. Budget per person * (under 25k / 25–50k / 50k–1L / 1L+ / discuss)
+10. Comfort level (homestay / mid-range / premium)
+11. Target species or interests
+12. Anything else — mobility, diet, previous trips
+
+→ Webhook to WhatsApp + email to {EMAIL}`]
+];
+
+var FOLDERS=[
+ ['photos/hero/','Homepage hero. Multiple files rotate automatically every 6.5 s.'],
+ ['photos/brand/','logo.png — used in the header, favicon and social previews.'],
+ ['photos/gallery/','"Recent field photography" strip on the homepage.'],
+ ['photos/locations/&lt;location-id&gt;/','Per-location photo + gallery. Folder name must match the id in data.js.'],
+ ['photos/tours/&lt;tour-slug&gt;/','Tour hero + trip gallery. Folder name must match the slug in data.js.'],
+ ['photos/species/&lt;species-slug&gt;/','Target-species cards. Lowercase, hyphens: satyr-tragopan.'],
+ ['photos/team/&lt;guide-id&gt;/','Guide portraits. Folder name must match the guide id in data.js.']
+];
+
+var PLAY=[
+ ['Weekly · ~2 hrs',[
+  ['Mon','Drop the weekend\'s best photos into photos/gallery/ and the relevant location folder. Update sightings[] in data.js.'],
+  ['Tue','Post a species spotlight to Instagram, cross-post to Facebook.'],
+  ['Wed','WhatsApp broadcast to your saved list — the season\'s most relevant trip.'],
+  ['Thu','Story drop: monthly status or a field moment.'],
+  ['Fri','Clear DMs, WhatsApp and email. Anything unresolved goes on next week\'s list.']
+ ]],
+ ['Monthly · ~4 hrs',[
+  ['Newsletter','One issue using the skeleton in the Content bank tab. Buttondown is free under 100 subscribers.'],
+  ['YouTube','One trip recap, 6–12 min. Cut on a phone if that is what is available. Post two Shorts from the same footage.'],
+  ['Pricing review','Open data.js — check every price against forest-department rates, lodge changes and fuel.'],
+  ['Calendar refresh','Update tour windows, mark anything sold out, add dates 90 days out.'],
+  ['Google Business','One photo, one short post, reply to every review. Highest-leverage free local SEO there is.'],
+  ['eBird audit','Confirm every trip filed its checklist. Check the hotspot links on locations.html still resolve.']
+ ]],
+ ['Quarterly',[
+  ['Guide onboarding','Add new guides to guides[] in data.js, drop a portrait in photos/team/<id>/.'],
+  ['New location','Add to locations[] with peak and closed months, create photos/locations/<id>/. The site wires it up.'],
+  ['New tour','Add to tours[] with itinerary and sites, create photos/tours/<slug>/.'],
+  ['Backup','Download the repo as a zip, or just rely on git history. Keep original-resolution photos off the repo.']
+ ]]
+];
+
+function monthPane(){
+  var m=cur+1,mo=FW.monthly[cur];
+  var peak=FW.locations.filter(function(l){return U.statusOf(l,m)==='peak'});
+  var open=FW.locations.filter(function(l){return U.statusOf(l,m)!=='closed'});
+  var avg=open.length?Math.round(open.reduce(function(s,l){return s+l.price},0)/open.length):0;
+  var tours=FW.tours.filter(function(t){return (t.sites||[]).some(function(s){
+    var l=FW.locations.filter(function(x){return x.id===s})[0];return l&&U.statusOf(l,m)==='peak';})});
+  return '<div class="filters" style="width:100%">'+FW.monthly.map(function(x,i){
+      return '<button data-m="'+i+'" aria-pressed="'+(i===cur)+'" style="flex:1">'+x.m+'</button>';}).join('')+'</div>'+
+    '<div class="kpi" style="margin-top:22px">'+
+      kpi('Open',open.length+'/18')+kpi('At peak',peak.length)+kpi('Status',mo.status)+
+      kpi('Avg ₹/day',U.inr(avg))+kpi('Bookable trips',tours.length)+'</div>'+
+    '<div style="display:grid;grid-template-columns:1fr minmax(260px,340px);gap:24px;margin-top:24px;align-items:start">'+
+      '<div class="scrollx"><div class="rows"><div class="row row-h" style="grid-template-columns:36px 1.4fr 1fr 76px 78px">'+
+        '<span>#</span><span>Site</span><span>Flagship</span><span>₹/day</span><span>Status</span></div>'+
+        FW.locations.map(function(l,i){
+          var s=U.statusOf(l,m);
+          return '<div class="row" style="grid-template-columns:36px 1.4fr 1fr 76px 78px;opacity:'+(s==='closed'?'.45':'1')+'">'+
+          '<span class="mono" style="font-size:10px;color:var(--muted)">'+String(i+1).padStart(2,'0')+'</span>'+
+          '<span><b>'+U.esc(l.name)+'</b><small>'+U.esc(l.district)+'</small></span>'+
+          '<span style="font-size:12px;color:var(--ink-2)">'+U.esc(l.species[0])+'</span>'+
+          '<span class="mono" style="font-size:11.5px;color:var(--ochre-2)">'+(s==='closed'?'—':(l.price/1000).toFixed(1)+'k')+'</span>'+
+          '<span class="pill pill--'+s+'">'+U.TONE_LABEL[s]+'</span></div>';
+        }).join('')+'</div></div>'+
+      '<div style="display:flex;flex-direction:column;gap:16px">'+
+        '<div style="background:var(--forest);color:var(--paper);padding:20px">'+
+          '<span class="eyebrow eyebrow--light">Push this month</span>'+
+          '<div style="display:flex;flex-direction:column;gap:9px;margin-top:14px">'+
+          (tours.length?tours.map(function(t){
+            return '<a href="tour.html?id='+t.slug+'" style="display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid rgba(244,242,236,.16);font-size:13px;color:var(--paper)">'+
+            '<span>'+U.esc(t.title)+'</span><span class="mono" style="font-size:11px;color:var(--sage)">'+U.inr(t.price)+'</span></a>';
+          }).join(''):'<p style="font-size:13px;color:rgba(244,242,236,.6)">Quiet month — push custom trips and Kulik.</p>')+
+          '</div></div>'+
+        '<div style="border:1px solid var(--rule);padding:20px;background:var(--paper)">'+
+          '<span class="eyebrow">Guides</span><div style="margin-top:12px">'+
+          FW.guides.map(function(g){
+            return '<div style="display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dotted var(--rule)">'+
+            '<span><b style="font-family:var(--display);font-size:15px;display:block">'+U.esc(g.name)+'</b>'+
+            '<small style="font-size:11px;color:var(--muted)">'+U.esc(g.region)+'</small></span>'+
+            '<span class="mono" style="font-size:10px;color:var(--good)">available</span></div>';
+          }).join('')+'</div></div>'+
+      '</div></div>';
+}
+function kpi(k,v){return '<div><span class="mono" style="font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">'+k+'</span><b>'+v+'</b></div>';}
+
+function contentPane(){
+  return '<p class="lede" style="margin-bottom:24px">Replace anything in <code class="mono">{CURLY_BRACES}</code>. Keep the voice plain and factual — no exclamation stacking, no fake urgency.</p>'+
+  '<div class="rows">'+SNIPPETS.map(function(s,i){
+    return '<details class="sn"><summary>'+
+      '<span><span class="mono" style="font-size:11px;color:var(--ochre-2);margin-right:12px">'+String(i+1).padStart(2,'0')+'</span>'+U.esc(s[0])+'</span>'+
+      '<span class="mono" style="color:var(--ochre-2)">+</span></summary>'+
+      '<div style="padding:0 20px 20px"><pre class="snip">'+U.esc(s[1])+'</pre>'+
+      '<button class="btn btn--sm" data-copy="'+i+'" style="margin-top:12px">Copy</button></div></details>';
+  }).join('')+'</div>';
+}
+
+function photosPane(){
+  var r=M.repoInfo();
+  return '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px">'+
+    '<div><span class="eyebrow">How it works</span>'+
+    '<h2 style="font-size:28px;margin-top:10px">Drop a file in. It appears.</h2>'+
+    '<p class="lede" style="margin-top:14px;font-size:15px">Every gallery resolves in three steps: an optional <code class="mono">index.json</code>, then the GitHub Contents API (any filename), then a numbered probe (<code class="mono">01.jpg</code>, <code class="mono">02.jpg</code>…). Whichever answers first wins. Results cache for six hours — hard-refresh to see new uploads immediately.</p>'+
+    '<p class="lede" style="margin-top:14px;font-size:15px">Filenames become captions. <code class="mono">01-satyr-tragopan_male.jpg</code> renders as <em>Satyr Tragopan · Male</em>.</p>'+
+    '<div style="margin-top:18px;padding:16px;border:1px solid var(--rule);background:var(--paper)">'+
+    '<span class="eyebrow">Detected repository</span><p class="mono" style="font-size:12.5px;margin-top:8px">'+
+    (r?U.esc(r.owner+'/'+r.repo+' @ '+r.branch):'Not on GitHub Pages — numbered-file fallback active')+'</p></div>'+
+    '<button class="btn btn--ghost btn--sm" id="clearCache" style="margin-top:16px">Clear photo cache</button></div>'+
+    '<div><span class="eyebrow">Folder map</span><div class="rows" style="margin-top:12px">'+
+    FOLDERS.map(function(f){
+      return '<div class="row" style="grid-template-columns:1fr;gap:6px;padding:14px 18px">'+
+      '<code class="mono" style="font-size:12px;color:var(--forest)">'+f[0]+'</code>'+
+      '<small style="font-size:12.5px;color:var(--ink-2);line-height:1.5">'+f[1]+'</small></div>';
+    }).join('')+'</div></div></div>';
+}
+
+function playbookPane(){
+  return PLAY.map(function(g){
+    return '<div style="margin-bottom:36px"><span class="eyebrow">'+g[0]+'</span>'+
+    '<div class="rows" style="margin-top:12px">'+g[1].map(function(r){
+      return '<div class="row" style="grid-template-columns:minmax(96px,120px) 1fr">'+
+      '<span class="mono" style="font-size:11px;letter-spacing:.1em;color:var(--ochre-2)">'+U.esc(r[0])+'</span>'+
+      '<span style="font-size:14px;line-height:1.55">'+U.esc(r[1])+'</span></div>';
+    }).join('')+'</div></div>';
+  }).join('')+
+  '<div style="padding:26px;background:var(--ink);color:var(--paper)">'+
+  '<span class="eyebrow eyebrow--light">The one rule</span>'+
+  '<p style="font-family:var(--display);font-size:24px;margin-top:10px;max-width:44ch;line-height:1.3">'+
+  'Edit <code class="mono" style="font-size:20px;color:var(--sage)">assets/js/data.js</code>, or drop a photo in a folder. Never anything else.</p></div>';
+}
+
+var PANES={month:monthPane,content:contentPane,photos:photosPane,playbook:playbookPane};
+function show(t){
+  document.getElementById('pane').innerHTML=PANES[t]();
+  document.querySelectorAll('#tabs button').forEach(function(b){b.setAttribute('aria-selected',b.getAttribute('data-t')===t)});
+  var mf=document.querySelector('#pane .filters');
+  if(mf)mf.addEventListener('click',function(e){
+    var b=e.target.closest('button[data-m]');if(!b)return;cur=+b.getAttribute('data-m');show('month');});
+  document.querySelectorAll('#pane [data-copy]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var i=+b.getAttribute('data-copy');
+      navigator.clipboard&&navigator.clipboard.writeText(SNIPPETS[i][1]).then(function(){
+        b.textContent='✓ Copied';setTimeout(function(){b.textContent='Copy'},1400);});
+    });
+  });
+  var cc=document.getElementById('clearCache');
+  if(cc)cc.addEventListener('click',function(){
+    Object.keys(localStorage).filter(function(k){return k.indexOf('fw_media:')===0})
+      .forEach(function(k){localStorage.removeItem(k)});
+    cc.textContent='✓ Cleared — reload';
+  });
+}
+document.getElementById('tabs').addEventListener('click',function(e){
+  var b=e.target.closest('button[data-t]');if(b)show(b.getAttribute('data-t'));});
+var mo=FW.monthly[new Date().getMonth()];
+document.getElementById('topStat').textContent=U.MONTHS[new Date().getMonth()]+' · '+mo.status+' · '+mo.open+'/18 open';
+show('month');
+})();
+</script>
+</body>
+</html>

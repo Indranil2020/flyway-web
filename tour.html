@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title id="ttl">Expedition — Flyway Expeditions</title>
+<meta name="description" id="desc" content="Birding expedition details, itinerary, target species and pricing."/>
+<link rel="icon" href="photos/brand/logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/site.css"/>
+<script src="assets/js/data.js"></script><script src="assets/js/media.js"></script>
+</head>
+<body>
+<div id="site-header"></div>
+<main id="main"></main>
+<div id="site-footer"></div>
+<script src="assets/js/site.js"></script>
+<script>
+(function(){
+  var FW=window.FW,U=window.FWUI;
+  var id=U.qs('id'),t=FW.tours.filter(function(x){return x.slug===id})[0]||FW.tours[0];
+  var z=FW.zones[t.zone];
+  document.getElementById('ttl').textContent=t.title+' — Flyway Expeditions';
+  document.getElementById('desc').setAttribute('content',t.blurb);
+
+  var sites=(t.sites||[]).map(function(s){return FW.locations.filter(function(l){return l.id===s})[0]}).filter(Boolean);
+  var waMsg="Hi Flyway — I'm interested in the "+t.title+" ("+t.days+" days, from "+U.inr(t.price)+"). My dates are: ";
+
+  var head=
+  '<section class="sect" style="border-bottom:0;padding-bottom:0"><div class="wrap">'+
+    '<div class="mono" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">'+
+      '<a href="index.html">Home</a> / <a href="tours.html">Expeditions</a> / <span style="color:var(--ink)">'+U.esc(t.title)+'</span></div>'+
+    '<div class="split" style="margin-top:30px;align-items:center">'+
+      '<div><div style="display:flex;align-items:center;gap:10px">'+
+        '<i class="dot" style="background:'+z.color+'"></i><span class="eyebrow">'+U.esc(z.label)+' · '+U.esc(z.sub)+'</span></div>'+
+        '<h1 style="font-size:clamp(34px,5.6vw,66px);margin-top:14px">'+U.esc(t.title)+'</h1>'+
+        '<p class="lede" style="margin-top:20px">'+U.esc(t.blurb)+'</p>'+
+        '<div class="stats" style="border-top:1px solid var(--rule)">'+
+          U.stat(t.days+' days',t.nights+' nights')+U.stat(t.group,'guests')+
+          U.stat(t.level,'difficulty')+U.stat(t.window,'season')+
+        '</div></div>'+
+      '<div data-photo="tours/'+t.slug+'" data-note="Tour hero photo" style="aspect-ratio:4/5"></div>'+
+    '</div></div></section>';
+
+  var bar=
+  '<section style="padding:34px var(--gut)"><div style="max-width:var(--wrap);margin:0 auto">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;padding:24px 30px;background:var(--forest);color:var(--paper)">'+
+      '<div><div class="mono" style="font-size:9.5px;letter-spacing:.16em;color:rgba(244,242,236,.6);text-transform:uppercase">From</div>'+
+      '<div style="display:flex;align-items:baseline;gap:9px;margin-top:5px">'+
+      '<span style="font-family:var(--display);font-size:clamp(30px,4vw,42px);line-height:1">'+U.inr(t.price)+'</span>'+
+      '<span style="font-size:13px;color:rgba(244,242,236,.72)">per person · twin sharing</span></div></div>'+
+      '<div style="display:flex;gap:11px;flex-wrap:wrap">'+
+        '<a class="btn btn--ochre btn--wa" data-wa="'+U.esc(waMsg)+'" href="#">Reserve dates</a>'+
+        '<a class="btn btn--onDark" href="contact.html?tour='+t.slug+'">Custom enquiry</a>'+
+      '</div></div></div></section>';
+
+  var itin=
+  '<section class="sect"><div class="wrap split">'+
+    '<div><span class="eyebrow">Itinerary</span>'+
+      '<h2 style="font-size:clamp(26px,3.4vw,40px);margin-top:12px">'+t.days+' days, built around the birds.</h2>'+
+      '<p class="lede" style="margin-top:16px;font-size:15px">Pre-dawn starts, unhurried sessions, and no mornings wasted in transit. The birds set the schedule.</p>'+
+      '<div class="rows" style="margin-top:26px" id="dayList">'+
+        t.itinerary.map(function(d,i){
+          return '<button class="row" data-i="'+i+'" style="grid-template-columns:64px 1fr">'+
+          '<span class="mono" style="font-size:11px;letter-spacing:.08em;color:var(--ochre-2)">D'+String(i+1).padStart(2,'0')+'</span>'+
+          '<b>'+U.esc(d.t)+'</b></button>';
+        }).join('')+
+      '</div></div>'+
+    '<div class="sticky" id="dayPane"></div>'+
+  '</div></section>';
+
+  var species=
+  '<section class="sect sect--tint"><div class="wrap">'+
+    '<div class="sect-head"><div><span class="eyebrow">Target species · '+t.species.length+'</span>'+
+    '<h2>What we\'re after.</h2></div><p>Drop a photo named after the bird into <code class="mono">photos/species/</code> and it appears here.</p></div>'+
+    '<div class="grid grid--4">'+t.species.map(function(s){
+      var slug=s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      return '<article class="card"><div data-photo="species/'+slug+'" data-note="'+U.esc(s)+'" data-nocaption style="aspect-ratio:1/1"></div>'+
+      '<div class="card-b" style="padding:14px 16px"><h3 style="font-size:16px">'+U.esc(s)+'</h3></div></article>';
+    }).join('')+'</div></div></section>';
+
+  var incl=
+  '<section class="sect"><div class="wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(32px,5vw,72px)">'+
+    '<div><span class="eyebrow" style="color:var(--forest)">Included</span>'+
+      '<h3 style="font-size:26px;margin-top:8px">All of this is taken care of.</h3>'+
+      '<ul style="list-style:none;padding:0;margin:22px 0 0">'+t.includes.map(function(i){
+        return '<li style="display:flex;gap:13px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:15px">'+
+        '<span style="color:var(--forest)">✓</span>'+U.esc(i)+'</li>';}).join('')+'</ul></div>'+
+    '<div><span class="eyebrow" style="color:var(--clay)">Not included</span>'+
+      '<h3 style="font-size:26px;margin-top:8px">Plan separately for these.</h3>'+
+      '<ul style="list-style:none;padding:0;margin:22px 0 0">'+
+      ['Flights or trains to '+t.from,'Personal travel insurance','Camera / lens hire','Tips and gratuities','Alcohol and bottled drinks','Anything of a personal nature']
+      .map(function(i){return '<li style="display:flex;gap:13px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:15px;color:var(--ink-2)">'+
+      '<span style="color:var(--clay)">—</span>'+U.esc(i)+'</li>';}).join('')+'</ul></div>'+
+  '</div></section>';
+
+  var where=sites.length?
+  '<section class="sect sect--tint"><div class="wrap">'+
+    '<div class="sect-head"><div><span class="eyebrow">Where this trip goes</span><h2>'+sites.length+' location'+(sites.length>1?'s':'')+' on this route.</h2></div></div>'+
+    '<div class="grid grid--3">'+sites.map(U.locCard).join('')+'</div></div></section>':'';
+
+  var gal=
+  '<section class="sect"><div class="wrap">'+
+    '<div class="sect-head"><div><span class="eyebrow">From this route</span><h2>Trip gallery.</h2></div>'+
+    '<p>Photos live in <code class="mono">photos/tours/'+t.slug+'/</code> — add files, they show up.</p></div>'+
+    '<div class="gal" data-gallery="tours/'+t.slug+'" data-note="Trip photos" data-max="12"></div></div></section>';
+
+  var cta=
+  '<section class="sect sect--dark center"><div class="wrap">'+
+    '<span class="eyebrow eyebrow--light">Ready when you are</span>'+
+    '<h2 style="font-size:clamp(30px,4.8vw,56px);margin-top:14px;max-width:24ch;margin-inline:auto">Send us your dates. We\'ll send back an itinerary.</h2>'+
+    '<div style="display:flex;justify-content:center;gap:12px;margin-top:32px;flex-wrap:wrap">'+
+      '<a class="btn btn--ochre btn--wa" data-wa="'+U.esc(waMsg)+'" href="#">WhatsApp the team</a>'+
+      '<a class="btn btn--onDark" href="contact.html?tour='+t.slug+'">Enquiry form</a>'+
+    '</div></div></section>';
+
+  document.getElementById('main').innerHTML=head+bar+itin+species+where+incl+gal+cta;
+
+  function paintDay(i){
+    var d=t.itinerary[i];
+    document.getElementById('dayPane').innerHTML=
+      '<div style="background:var(--paper-2);border:1px solid var(--rule);padding:clamp(24px,4vw,40px)">'+
+      '<span class="eyebrow">Day '+String(i+1).padStart(2,'0')+'</span>'+
+      '<h3 style="font-size:clamp(22px,3vw,30px);margin-top:10px">'+U.esc(d.t)+'</h3>'+
+      '<ol style="list-style:none;padding:0;margin:26px 0 0">'+d.a.map(function(a,j){
+        return '<li style="display:flex;gap:15px;padding:13px 0;border-bottom:1px dotted var(--rule)">'+
+        '<span class="mono" style="font-size:11px;color:var(--ochre-2);min-width:26px;padding-top:2px">'+String(j+1).padStart(2,'0')+'</span>'+
+        '<span style="font-size:15px">'+U.esc(a)+'</span></li>';}).join('')+'</ol></div>';
+    document.querySelectorAll('#dayList .row').forEach(function(b,k){
+      b.style.background=k===i?'var(--paper-2)':'transparent';
+    });
+  }
+  document.getElementById('dayList').addEventListener('click',function(e){
+    var b=e.target.closest('.row[data-i]');if(b)paintDay(+b.getAttribute('data-i'));
+  });
+  paintDay(0);
+  window.FWUI.mount();
+})();
+</script>
+</body>
+</html>

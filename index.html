@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Flyway Expeditions — Birding &amp; Wildlife Tours in West Bengal</title>
+<meta name="description" content="Field-led birding and wildlife expeditions across 18 locations in West Bengal — Sundarbans, Dooars, Singalila, Neora Valley. Small groups, expert naturalists, custom itineraries from Kolkata."/>
+<meta property="og:title" content="Flyway Expeditions — Birding &amp; Wildlife Tours in West Bengal"/>
+<meta property="og:description" content="The flyway runs through Bengal. 18 locations, 350+ species, small guided groups."/>
+<meta property="og:image" content="photos/brand/logo.png"/>
+<meta property="og:type" content="website"/>
+<link rel="icon" href="photos/brand/logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/site.css"/>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/media.js"></script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<section class="hero hero--onPhoto">
+  <div class="hero-bg" id="heroBg" data-photo="hero" data-note="Homepage hero" data-nocaption data-rotate></div>
+  <div class="hero-in">
+    <span class="eyebrow">West Bengal · India · Est. 2024</span>
+    <h1>The flyway runs <em>through Bengal.</em></h1>
+    <p class="lede">Field-led birding and wildlife expeditions across 18 hand-picked locations — from the mangrove creeks of the Sundarbans to 3,600&nbsp;m on the Singalila ridge. Small groups. Real naturalists. No scripted safari.</p>
+    <div class="hero-actions">
+      <a class="btn btn--ochre" href="contact.html">Plan a trip →</a>
+      <a class="btn btn--onDark" href="tours.html">Browse expeditions</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>18</b><span>locations</span></div>
+      <div class="stat"><b>350+</b><span>species recorded</span></div>
+      <div class="stat"><b>3</b><span>habitat zones</span></div>
+      <div class="stat"><b>4–8</b><span>guests per trip</span></div>
+    </div>
+  </div>
+  <div id="nowSlot"></div>
+</section>
+
+<section class="sect">
+  <div class="wrap">
+    <div class="sect-head">
+      <div><span class="eyebrow">Featured expeditions</span><h2>This season's trips.</h2></div>
+      <p>Six routes covering all three zones. Every one runs on fixed departures and as a private custom trip.</p>
+    </div>
+    <div class="grid grid--3" id="tourGrid"></div>
+    <div style="margin-top:32px"><a class="btn btn--ghost" href="tours.html">All expeditions →</a></div>
+  </div>
+</section>
+
+<section class="sect sect--tint">
+  <div class="wrap">
+    <div class="sect-head">
+      <div><span class="eyebrow">The bird year</span><h2>Bengal on a twelve-month clock.</h2></div>
+      <p>Eighteen locations, each with its own window. This is the single most useful thing to know before you book.</p>
+    </div>
+    <div id="calSlot"></div>
+    <div style="margin-top:32px"><a class="btn btn--ghost" href="calendar.html">Full calendar &amp; species timing →</a></div>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">The territory</span>
+      <h2 style="font-size:clamp(30px,4vw,46px);margin-top:12px">Three zones.<br/>One bird-rich state.</h2>
+      <p class="lede" style="margin-top:18px">From mangrove silt at sea level to rhododendron at 3,600&nbsp;m, West Bengal packs more habitat into one state than almost anywhere in India.</p>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:28px" id="zoneList"></div>
+      <a class="btn btn--ghost" style="margin-top:26px" href="locations.html">All 18 locations →</a>
+    </div>
+    <div class="grid grid--3" id="locGrid"></div>
+  </div>
+</section>
+
+<section class="sect sect--dark">
+  <div class="wrap">
+    <div class="sect-head">
+      <div><span class="eyebrow eyebrow--light">Field reports &amp; eBird</span><h2>What's being seen, right now.</h2></div>
+      <p>Recent sightings from our guides and trip groups across the 18 hotspots. Every trip files a complete eBird checklist.</p>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:rgba(244,242,236,.16)" id="sightGrid"></div>
+    <div style="display:flex;gap:12px;margin-top:30px;flex-wrap:wrap">
+      <a class="btn btn--ochre" href="locations.html">Browse hotspots →</a>
+      <a class="btn btn--onDark" id="ebirdBtn" target="_blank" rel="noopener">eBird · West Bengal</a>
+    </div>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="wrap">
+    <div class="sect-head">
+      <div><span class="eyebrow">Recent field photography</span><h2>From the last few trips.</h2></div>
+      <p>Drop new images into <code class="mono">photos/gallery/</code> and they appear here automatically.</p>
+    </div>
+    <div class="gal" data-gallery="gallery" data-note="Recent trip photos" data-max="12"></div>
+  </div>
+</section>
+
+<section class="sect sect--tint">
+  <div class="wrap">
+    <div class="sect-head">
+      <div><span class="eyebrow">The team</span><h2>Guides who speak bird first.</h2></div>
+      <p>Region-by-region specialists, not generalists. Each trip is led by the person who knows that ground best.</p>
+    </div>
+    <div class="grid grid--3" id="guideGrid"></div>
+    <div style="margin-top:32px"><a class="btn btn--ghost" href="team.html">Meet the guides →</a></div>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="wrap">
+    <span class="eyebrow">Words from the field</span>
+    <div class="grid grid--3" style="margin-top:26px" id="quoteGrid"></div>
+  </div>
+</section>
+
+<section class="sect center">
+  <div class="wrap">
+    <span class="eyebrow">Plan your trip</span>
+    <h2 style="font-size:clamp(34px,5.6vw,68px);margin-top:16px;max-width:22ch">Tell us what you want to see. <em style="font-style:italic;color:var(--ochre-2)">We'll do the rest.</em></h2>
+    <p class="lede" style="margin-top:22px">Send your dates, target species, group size and budget. We reply within one working day with a draft itinerary and a firm quote.</p>
+    <div style="display:flex;justify-content:center;gap:12px;margin-top:34px;flex-wrap:wrap">
+      <a class="btn btn--wa" data-wa="Hi Flyway — I'd like to plan a birding trip in West Bengal." href="#">WhatsApp <span data-brand="phoneDisplay"></span></a>
+      <a class="btn btn--ghost" href="contact.html">Enquiry form</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="assets/js/site.js"></script>
+<script>
+(function(){
+  var FW=window.FW,U=window.FWUI;
+  document.getElementById('nowSlot').outerHTML=U.nowCard();
+  document.getElementById('calSlot').innerHTML=U.calendar();
+  document.getElementById('tourGrid').innerHTML=FW.tours.filter(function(t){return t.featured}).slice(0,6).map(U.tourCard).join('');
+  document.getElementById('locGrid').innerHTML=['sundarbans','singalila','latpanchar','gorumara'].map(function(id){
+    return U.locCard(FW.locations.find(function(l){return l.id===id}));
+  }).join('');
+  document.getElementById('zoneList').innerHTML=Object.keys(FW.zones).map(function(k){
+    var z=FW.zones[k],n=FW.locations.filter(function(l){return l.zone===k}).length;
+    return '<div style="display:flex;gap:13px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid var(--rule)">'+
+    '<i style="width:12px;height:12px;margin-top:6px;background:'+z.color+';flex:none"></i>'+
+    '<div><div style="font-family:var(--display);font-size:18px">'+z.label+'</div>'+
+    '<div style="font-size:12.5px;color:var(--muted)">'+z.sub+'</div></div>'+
+    '<span class="mono" style="margin-left:auto;font-size:12px;color:var(--muted)">'+n+' sites</span></div>';
+  }).join('');
+  document.getElementById('sightGrid').innerHTML=U.sightingsRows();
+  document.getElementById('ebirdBtn').href=FW.brand.ebird;
+  document.getElementById('guideGrid').innerHTML=FW.guides.map(function(g){return U.guideCard(g,false)}).join('');
+  document.getElementById('quoteGrid').innerHTML=FW.testimonials.map(function(t){
+    return '<figure class="card" style="padding:30px"><span style="font-family:var(--display);font-size:52px;color:var(--sage);line-height:.5;display:block">&ldquo;</span>'+
+    '<blockquote style="margin:16px 0 0;font-family:var(--display);font-size:19px;line-height:1.4">'+U.esc(t.quote)+'</blockquote>'+
+    '<figcaption style="margin-top:22px;padding-top:18px;border-top:1px solid var(--rule)">'+
+    '<div style="font-weight:500;font-size:14px">'+U.esc(t.name)+'</div>'+
+    '<div class="mono" style="font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.06em">'+U.esc(t.from)+' · '+U.esc(t.trip)+'</div>'+
+    '</figcaption></figure>';
+  }).join('');
+  U.hydrate();
+  window.FW_MEDIA.list('hero').then(function(imgs){
+    if(imgs.length) return;
+    document.getElementById('heroBg').classList.add('hero-bg--empty');
+    document.querySelector('.hero').classList.remove('hero--onPhoto');
+    document.querySelectorAll('.hero .btn--onDark').forEach(function(b){
+      b.classList.remove('btn--onDark');b.classList.add('btn--ghost');
+    });
+  });
+})();
+</script>
+<template id="__bundler_thumbnail"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#f4f2ec"/><circle cx="100" cy="100" r="66" fill="none" stroke="#2a3527" stroke-width="4"/><path d="M52 116q28-34 52-22t44-6" stroke="#2a3527" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M60 132q22 6 44 2" stroke="#8a9a7b" stroke-width="5" fill="none"/></svg></template>
+</body>
+</html>

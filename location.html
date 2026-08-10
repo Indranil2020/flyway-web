@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title id="ttl">Location — Flyway Expeditions</title>
+<meta name="description" id="desc" content="Birding location details, seasonal timing, flagship species and rates."/>
+<link rel="icon" href="photos/brand/logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/site.css"/>
+<script src="assets/js/data.js"></script><script src="assets/js/media.js"></script>
+</head>
+<body>
+<div id="site-header"></div>
+<main id="main"></main>
+<div id="site-footer"></div>
+<script src="assets/js/site.js"></script>
+<script>
+(function(){
+  var FW=window.FW,U=window.FWUI;
+  var id=U.qs('id'),l=FW.locations.filter(function(x){return x.id===id})[0]||FW.locations[0];
+  var z=FW.zones[l.zone];
+  document.getElementById('ttl').textContent=l.name+' birding — Flyway Expeditions';
+  document.getElementById('desc').setAttribute('content','Birding at '+l.name+', '+l.district+' district, West Bengal. '+l.note);
+
+  var related=FW.tours.filter(function(t){return (t.sites||[]).indexOf(l.id)>-1});
+  var waMsg="Hi Flyway — I'd like to bird at "+l.name+". My dates are: ";
+  var peakNames=(l.peak||[]).map(function(m){return U.MONTHS[m-1]}).join(', ');
+
+  var head=
+  '<section class="sect" style="border-bottom:0;padding-bottom:0"><div class="wrap">'+
+    '<div class="mono" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">'+
+    '<a href="index.html">Home</a> / <a href="locations.html">Locations</a> / <span style="color:var(--ink)">'+U.esc(l.name)+'</span></div>'+
+    '<div class="split" style="margin-top:30px;align-items:center">'+
+      '<div><div style="display:flex;align-items:center;gap:10px">'+
+        '<i class="dot" style="background:'+z.color+'"></i><span class="eyebrow">'+U.esc(z.label)+' · '+U.esc(z.sub)+'</span></div>'+
+        '<h1 style="font-size:clamp(34px,5.6vw,66px);margin-top:14px">'+U.esc(l.name)+'</h1>'+
+        '<p class="lede" style="margin-top:18px">'+U.esc(l.note)+'</p>'+
+        '<div class="stats" style="border-top:1px solid var(--rule)">'+
+          U.stat(l.elev,'elevation')+U.stat(l.district,'district')+
+          U.stat(l.stay,'ideal stay')+U.stat(U.inr(l.price),'peak / day')+
+        '</div>'+
+        '<div style="display:flex;gap:11px;margin-top:28px;flex-wrap:wrap">'+
+          '<a class="btn btn--wa" data-wa="'+U.esc(waMsg)+'" href="#">Plan a '+U.esc(l.name)+' trip</a>'+
+          '<a class="btn btn--ghost" href="'+U.ebirdLink(l)+'" target="_blank" rel="noopener">eBird hotspot ↗</a>'+
+          '<a class="btn btn--ghost" href="'+U.mapLink(l)+'" target="_blank" rel="noopener">Map ↗</a>'+
+        '</div></div>'+
+      '<div data-photo="locations/'+l.id+'" data-note="Location photo" style="aspect-ratio:4/5"></div>'+
+    '</div></div></section>';
+
+  var timing=
+  '<section class="sect"><div class="wrap split">'+
+    '<div><span class="eyebrow">When to come</span>'+
+      '<h2 style="font-size:clamp(26px,3.4vw,40px);margin-top:12px">Twelve-month outlook.</h2>'+
+      '<p class="lede" style="margin-top:16px;font-size:15px">Peak months here are <strong>'+U.esc(peakNames||'—')+'</strong>. '+
+      ((l.closed||[]).length?'The site is closed '+(l.closed||[]).map(function(m){return U.MONTHS[m-1]}).join(', ')+'.':'Open year-round, with quality varying by season.')+'</p>'+
+      '<div class="tags" style="margin-top:22px">'+l.species.map(function(s){return '<span class="tag">'+U.esc(s)+'</span>'}).join('')+'</div>'+
+    '</div>'+
+    '<div><div class="mkeys" style="font-size:11px;margin-bottom:6px">'+U.MONTHS.map(function(m){return '<span>'+m.slice(0,1)+'</span>'}).join('')+'</div>'+
+      '<div class="mrow" style="gap:5px">'+[1,2,3,4,5,6,7,8,9,10,11,12].map(function(m){
+        var s=U.statusOf(l,m);
+        return '<i style="height:56px;background:'+U.TONE[s]+';flex-direction:column;gap:3px;font-size:9px">'+
+        '<span>'+U.MONTHS[m-1].slice(0,3)+'</span><span style="opacity:.8">'+(s==='peak'?'★':s==='closed'?'—':'')+'</span></i>';
+      }).join('')+'</div>'+
+      '<div class="legend" style="margin-top:18px">'+[['peak','Peak'],['good','Open'],['fair','Fair'],['closed','Closed']]
+        .map(function(p){return '<div><i style="background:'+U.TONE[p[0]]+'"></i>'+p[1]+'</div>'}).join('')+'</div>'+
+    '</div></div></section>';
+
+  var gal=
+  '<section class="sect sect--tint"><div class="wrap">'+
+    '<div class="sect-head"><div><span class="eyebrow">Gallery</span><h2>'+U.esc(l.name)+' in pictures.</h2></div>'+
+    '<p>Add images to <code class="mono">photos/locations/'+l.id+'/</code> — captions come from the filenames.</p></div>'+
+    '<div class="gal" data-gallery="locations/'+l.id+'" data-note="Location photos" data-max="12"></div></div></section>';
+
+  var rel=related.length?
+  '<section class="sect"><div class="wrap"><div class="sect-head"><div>'+
+    '<span class="eyebrow">Trips that include this site</span><h2>'+related.length+' expedition'+(related.length>1?'s':'')+'.</h2></div></div>'+
+    '<div class="grid grid--3">'+related.map(U.tourCard).join('')+'</div></div></section>':
+  '<section class="sect"><div class="wrap center"><span class="eyebrow">Custom only</span>'+
+    '<h2 style="font-size:clamp(26px,3.6vw,42px);margin-top:12px;max-width:24ch;margin-inline:auto">'+
+    'This site runs as a private custom trip.</h2>'+
+    '<div style="display:flex;justify-content:center;gap:12px;margin-top:26px;flex-wrap:wrap">'+
+    '<a class="btn btn--wa" data-wa="'+U.esc(waMsg)+'" href="#">Ask about '+U.esc(l.name)+'</a>'+
+    '<a class="btn btn--ghost" href="contact.html">Enquiry form</a></div></div></section>';
+
+  var near=
+  '<section class="sect sect--dark"><div class="wrap"><div class="sect-head">'+
+    '<div><span class="eyebrow eyebrow--light">Same zone</span><h2>Nearby sites worth pairing.</h2></div></div>'+
+    '<div class="grid grid--4">'+FW.locations.filter(function(x){return x.zone===l.zone&&x.id!==l.id}).slice(0,4).map(function(x){
+      return '<a href="location.html?id='+x.id+'" style="padding:22px;border:1px solid rgba(244,242,236,.2);display:block">'+
+      '<div style="font-family:var(--display);font-size:20px;color:var(--paper)">'+U.esc(x.name)+'</div>'+
+      '<div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--sage);margin-top:7px;text-transform:uppercase">'+U.esc(x.elev)+' · '+U.esc(x.stay)+'</div>'+
+      '<div style="font-size:12.5px;color:rgba(244,242,236,.66);margin-top:10px;line-height:1.5">'+U.esc(x.species[0])+'</div></a>';
+    }).join('')+'</div></div></section>';
+
+  document.getElementById('main').innerHTML=head+timing+gal+rel+near;
+  window.FWUI.mount();
+})();
+</script>
+</body>
+</html>

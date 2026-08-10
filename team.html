@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Our guides — Flyway Expeditions</title>
+<meta name="description" content="Meet the field naturalists who lead Flyway Expeditions trips across West Bengal. Region-by-region specialists in birding, mammal tracking and wildlife photography."/>
+<link rel="icon" href="photos/brand/logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/site.css"/>
+<script src="assets/js/data.js"></script><script src="assets/js/media.js"></script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<section class="sect">
+  <div class="wrap">
+    <span class="eyebrow">The team · growing region by region</span>
+    <h1 style="font-size:clamp(38px,6vw,72px);margin-top:14px;max-width:20ch">Naturalists in the field, <em style="font-style:italic;color:var(--ochre-2)">not in an office.</em></h1>
+    <p class="lede" style="margin-top:20px">Flyway is built around specialists. Each guide owns a region and knows its birds, its weather and its back roads better than any itinerary could describe. As we expand across India, this page grows with us.</p>
+  </div>
+</section>
+
+<section class="sect sect--tint">
+  <div class="wrap">
+    <div class="sect-head"><div><span class="eyebrow">Lead guide</span><h2>Who you'll be in the field with.</h2></div></div>
+    <div id="featured"></div>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="wrap">
+    <div class="sect-head"><div><span class="eyebrow">Regional naturalists</span><h2>The wider team.</h2></div>
+    <p>Portraits live in <code class="mono">photos/team/&lt;id&gt;/</code> — add a folder named after the guide's id.</p></div>
+    <div class="grid grid--2" id="others"></div>
+  </div>
+</section>
+
+<section class="sect sect--tint">
+  <div class="wrap">
+    <div class="sect-head"><div><span class="eyebrow">How we work</span><h2>Four things we won't compromise on.</h2></div></div>
+    <div class="grid grid--4">
+      <div class="card" style="padding:26px"><h3 style="font-size:19px">Small groups, hard caps</h3><p style="margin-top:12px">Four to eight guests. We do not merge parties to fill seats, and high-altitude trips run smaller still.</p></div>
+      <div class="card" style="padding:26px"><h3 style="font-size:19px">One guide, whole trip</h3><p style="margin-top:12px">The person who meets you at the airport is the person birding with you on the last morning. No handoffs.</p></div>
+      <div class="card" style="padding:26px"><h3 style="font-size:19px">Every checklist filed</h3><p style="margin-top:12px">Complete eBird checklists on every trip, under the trip name. Your sightings become public data.</p></div>
+      <div class="card" style="padding:26px"><h3 style="font-size:19px">Local money stays local</h3><p style="margin-top:12px">Homestays, village kitchens and local drivers wherever the standard allows it. Guiding fees are paid direct.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sect sect--dark">
+  <div class="wrap">
+    <span class="eyebrow eyebrow--light">Now recruiting</span>
+    <h2 style="font-size:clamp(28px,4.4vw,48px);margin-top:14px;max-width:24ch">Are you a field naturalist?</h2>
+    <p class="lede" style="margin-top:18px;color:rgba(244,242,236,.74)">We're expanding region by region. If you guide birders in Assam, Sikkim, Bhutan, Uttarakhand, the Western Ghats or the Andamans — and you'd rather work with an operator that puts the field first — get in touch.</p>
+    <div style="display:flex;gap:12px;margin-top:30px;flex-wrap:wrap">
+      <a class="btn btn--ochre btn--wa" data-wa="Hi Flyway — I'm a field guide interested in working with you. My region is: " href="#">Apply on WhatsApp</a>
+      <a class="btn btn--onDark" data-mailto href="#">Email us</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="assets/js/site.js"></script>
+<script>
+(function(){
+  var FW=window.FW,U=window.FWUI;
+  var f=FW.guides.filter(function(g){return g.featured})[0]||FW.guides[0];
+  document.getElementById('featured').innerHTML=U.guideCard(f,true);
+  document.getElementById('others').innerHTML=FW.guides.filter(function(g){return g!==f})
+    .map(function(g){return U.guideCard(g,false)}).join('');
+  U.hydrate();
+})();
+</script>
+</body>
+</html>

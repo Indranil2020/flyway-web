@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Birding calendar — when to visit West Bengal | Flyway Expeditions</title>
+<meta name="description" content="Month-by-month birding calendar for West Bengal. Which of our 18 sites are open, which are at peak, migration timing, and what to book when."/>
+<link rel="icon" href="photos/brand/logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/site.css"/>
+<script src="assets/js/data.js"></script><script src="assets/js/media.js"></script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<section class="sect">
+  <div class="wrap">
+    <span class="eyebrow">The bird year · West Bengal</span>
+    <h1 style="font-size:clamp(38px,6vw,72px);margin-top:14px;max-width:19ch">When to come, <em style="font-style:italic;color:var(--ochre-2)">and what for.</em></h1>
+    <p class="lede" style="margin-top:20px">Pick a month to see exactly which sites are open, which are at peak, and which trips make sense. This is the page to read before you book flights.</p>
+    <div class="filters" style="margin-top:32px" id="mFilters"></div>
+    <div style="margin-top:34px" id="calSlot"></div>
+  </div>
+</section>
+
+<section class="sect sect--tint">
+  <div class="wrap" id="monthPane"></div>
+</section>
+
+<section class="sect">
+  <div class="wrap">
+    <div class="sect-head"><div><span class="eyebrow">Migration</span><h2>Key movements through the year.</h2></div>
+    <p>West Bengal sits on the Central Asian Flyway. These are the windows that matter.</p></div>
+    <div class="rows" id="migRows"></div>
+  </div>
+</section>
+
+<section class="sect sect--dark center">
+  <div class="wrap">
+    <span class="eyebrow eyebrow--light">Not sure when to come?</span>
+    <h2 style="font-size:clamp(30px,4.6vw,52px);margin-top:14px;max-width:22ch;margin-inline:auto">Tell us your window. We'll tell you what's possible.</h2>
+    <div style="display:flex;justify-content:center;gap:12px;margin-top:30px;flex-wrap:wrap">
+      <a class="btn btn--ochre btn--wa" data-wa="Hi Flyway — I can travel in [month]. What's good then?" href="#">Ask on WhatsApp</a>
+      <a class="btn btn--onDark" href="contact.html">Enquiry form</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="assets/js/site.js"></script>
+<script>
+(function(){
+  var FW=window.FW,U=window.FWUI,cur=new Date().getMonth();
+  var MIG=[
+    ['Oct – Nov','Arrival · Siberian & Central Asian waterfowl','All wetlands, Purbasthali, Rajarhat, Kulik'],
+    ['Nov – Dec','Arrival · Himalayan altitudinal migrants','Singalila, Lava, Neora Valley, Senchal'],
+    ['Dec – Feb','Peak diversity across every zone','All 18 locations'],
+    ['Mar – Apr','Departure · altitudinal migrants move up','North Bengal, Dooars'],
+    ['Mar – Apr','Departure · waterfowl head north','Purbasthali, Rajarhat, Bethuadahari'],
+    ['May – Aug','Breeding season · residents and heronries','Kulik, Sundarbans, Chintamani Kar']
+  ];
+  document.getElementById('mFilters').innerHTML=FW.monthly.map(function(m,i){
+    return '<button data-m="'+i+'" aria-pressed="'+(i===cur)+'">'+m.m+'</button>';}).join('');
+  document.getElementById('migRows').innerHTML=MIG.map(function(r){
+    return '<div class="row" style="grid-template-columns:minmax(110px,150px) minmax(200px,1.6fr) 1fr">'+
+    '<span class="mono" style="font-size:11px;letter-spacing:.1em;color:var(--ochre-2)">'+r[0]+'</span>'+
+    '<b>'+r[1]+'</b><small>'+r[2]+'</small></div>';}).join('');
+
+  function paint(i){
+    var mo=FW.monthly[i],m=i+1;
+    var peak=FW.locations.filter(function(l){return U.statusOf(l,m)==='peak'});
+    var open=FW.locations.filter(function(l){return U.statusOf(l,m)!=='closed'});
+    var shut=FW.locations.filter(function(l){return U.statusOf(l,m)==='closed'});
+    var tours=FW.tours.filter(function(t){
+      return (t.sites||[]).some(function(s){
+        var l=FW.locations.filter(function(x){return x.id===s})[0];
+        return l&&U.statusOf(l,m)==='peak';});
+    });
+    document.getElementById('calSlot').innerHTML=U.calendar(i);
+    document.getElementById('monthPane').innerHTML=
+      '<div class="sect-head"><div><span class="eyebrow">'+U.MONTHS[i]+' in Bengal</span>'+
+      '<h2>'+mo.status+' · '+open.length+' of 18 sites open.</h2></div>'+
+      '<p>'+(peak.length?peak.length+' site'+(peak.length>1?'s are':' is')+' at absolute peak this month.':'No sites at peak — a quieter month for resident species.')+'</p></div>'+
+      '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">'+
+        block('At peak',peak,'peak')+block('Open',open.filter(function(l){return U.statusOf(l,m)!=='peak'}),'good')+
+        (shut.length?block('Closed',shut,'closed'):'')+
+      '</div>'+
+      (tours.length?'<div style="margin-top:40px"><span class="eyebrow">Book these in '+U.MONTHS[i]+'</span>'+
+      '<div class="grid grid--3" style="margin-top:20px">'+tours.map(U.tourCard).join('')+'</div></div>':'');
+    U.hydrate();
+  }
+  function block(title,list,tone){
+    return '<div style="border:1px solid var(--rule);background:var(--paper);padding:22px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center"><span class="eyebrow">'+title+'</span>'+
+      '<span class="pill pill--'+tone+'">'+list.length+'</span></div>'+
+      '<div style="display:flex;flex-direction:column;gap:0;margin-top:14px">'+
+      (list.length?list.map(function(l){
+        return '<a href="location.html?id='+l.id+'" style="display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dotted var(--rule);font-size:13.5px">'+
+        '<span>'+U.esc(l.name)+'</span><span class="mono" style="font-size:11px;color:var(--muted)">'+
+        (tone==='closed'?'—':U.inr(l.price))+'</span></a>';}).join(''):
+        '<p style="font-size:13px;color:var(--muted)">None.</p>')+'</div></div>';
+  }
+  document.getElementById('mFilters').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-m]');if(!b)return;
+    cur=+b.getAttribute('data-m');
+    this.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+    paint(cur);
+  });
+  paint(cur);
+})();
+</script>
+</body>
+</html>
