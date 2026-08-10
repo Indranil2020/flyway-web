@@ -9,3 +9,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Local-only deploy helper (not part of the site)
+deploy-to-pages.sh
