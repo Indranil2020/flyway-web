@@ -13,3 +13,4 @@ Thumbs.db
 # Local-only deploy helpers (not part of the site)
 deploy-to-pages.sh
 publish.sh
+scripts/
