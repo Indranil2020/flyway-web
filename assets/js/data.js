@@ -261,7 +261,7 @@ window.FW = {
     guides: [
         {
             id: "samim", name: "Samim Akhter", role: "Lead Field Guide", region: "North Bengal & Sundarbans",
-            years: 8, trips: 140, langs: "English · Bengali · Hindi",
+            years: 18, trips: 1400, langs: "English · Bengali · Hindi",
             specialty: "Hornbill stake-outs, mangrove specialties, raptors",
             bio: "Samim has guided birders across Bengal since 2018 and runs one of the most-followed bird photography pages in the state. His speciality is the long, patient wait — the kind that turns “we tried for it” into “we got it”.",
             featured: true
@@ -274,7 +274,7 @@ window.FW = {
             featured: false
         },
         {
-            id: "indrani", name: "Indrani M.", role: "Lead Naturalist", region: "South Bengal wetlands",
+            id: "indranil", name: "Indranil", role: "Lead Naturalist", region: "South Bengal wetlands",
             years: 11, trips: 220, langs: "English · Bengali",
             specialty: "Waders, wildfowl, citizen science",
             bio: "An eBird reviewer for the region with over two decades of wetland counts behind her. Runs our checklist and data programme.",
@@ -302,7 +302,7 @@ window.FW = {
         { species: "Mangrove Pitta", loc: "Sundarbans", when: "3 days ago", n: 1, by: "Samim A." },
         { species: "Blood Pheasant", loc: "Singalila NP", when: "5 days ago", n: 7, by: "Trip #142" },
         { species: "Pallas's Fish Eagle", loc: "Gorumara NP", when: "1 week ago", n: 2, by: "Rohit S." },
-        { species: "Pheasant-tailed Jacana", loc: "Chintamani Kar", when: "1 week ago", n: 12, by: "Indrani M." },
+        { species: "Pheasant-tailed Jacana", loc: "Chintamani Kar", when: "1 week ago", n: 12, by: "Indranil" },
         { species: "Fire-tailed Myzornis", loc: "Neora Valley", when: "2 weeks ago", n: 3, by: "Trip #138" }
     ],
 
